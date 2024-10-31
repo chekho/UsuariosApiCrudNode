@@ -258,4 +258,57 @@ router.post("/", usuariosController.crearUsuario);
  */
 router.put("/:id", usuariosController.actualizarUsuario);
 
+/**
+ * @swagger
+ * /usuarios/{id}:
+ *   delete:
+ *     summary: Elimina un usuario
+ *     tags: [Usuarios]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Usuario eliminado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   description: Mensaje de eliminación
+ *                   example: Usuario eliminado
+ *       400:
+ *         description: Error de validación
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 err:
+ *                   type: boolean
+ *                   description: Indica si hubo un error
+ *                 message:
+ *                   type: string
+ *                   description: Mensaje de error
+ *       404:
+ *         description: Usuario no encontrado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 err:
+ *                   type: boolean
+ *                   description: Indica si hubo un error
+ *                 message:
+ *                   type: string
+ *                   description: Mensaje de error
+ */
+router.delete("/:id", usuariosController.eliminarUsuario);
+
 export default router;

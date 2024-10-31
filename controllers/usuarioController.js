@@ -121,7 +121,22 @@ const actualizarUsuario = (req, res) => {
   });
 };
 
-const eliminarUsuario = (req, res) => {};
+const eliminarUsuario = (req, res) => {
+  let id = parseInt(req.params.id);
+  if (isNaN(id)) {
+    res.status(400).json({ err: true, message: "Id invalido" });
+    return;
+  }
+  let usuarioIndex = usuarios.findIndex((usuario) => usuario.id === id);
+  if (usuarioIndex === -1) {
+    res.status(404).json({ err: true, message: "Usuario no encontrado" });
+    return;
+  }
+  usuarios.splice(usuarioIndex, 1);
+  res.json({
+    message: "Usuario eliminado",
+  });
+};
 
 export default {
   getUsuarios,
