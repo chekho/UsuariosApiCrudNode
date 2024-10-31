@@ -29,7 +29,21 @@ const getUsuarios = (req, res) => {
   res.json(usuarios);
 };
 
-const getUsuario = (req, res) => {};
+const getUsuario = (req, res) => {
+  let id = parseInt(req.params.id);
+  if (isNaN(id)) {
+    res.status(400).json({ err: true, message: "Id invalido" });
+    return;
+  }
+  let usuarioIndex = usuarios.findIndex((usuario) => usuario.id === id);
+  if (usuarioIndex === -1) {
+    res.status(404).json({ err: true, message: "Usuario no encontrado" });
+  } else {
+    res.json({
+      usuario: usuarios[usuarioIndex],
+    });
+  }
+};
 
 const crearUsuario = (req, res) => {};
 
