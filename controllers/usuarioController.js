@@ -25,56 +25,60 @@ let usuarios = [
   },
 ];
 
+const validateUsuario = (nombre, apellido, email, id = null) => {
+  if (!nombre || !email) {
+    return { err: true, message: "Nombre y email requeridos" };
+  }
+  if (!email.includes("@") || !email.includes(".")) {
+    return { err: true, message: "Formato de email invalido" };
+  }
+  if (
+    usuarios.find((usuario) => usuario.email === email && usuario.id !== id)
+  ) {
+    return { err: true, message: "Email ya existe" };
+  }
+  if (nombre.match(/\d+/) || apellido.match(/\d+/)) {
+    return { err: true, message: "Nombre y apellido no pueden tener numeros" };
+  }
+  return null;
+};
+
+const findUsuarioById = (id) => {
+  if (isNaN(id)) {
+    return { err: true, message: "Id invalido" };
+  }
+  const usuarioIndex = usuarios.findIndex((usuario) => usuario.id === id);
+  if (usuarioIndex === -1) {
+    return { err: true, message: "Usuario no encontrado" };
+  }
+  return { usuarioIndex };
+};
+
 const getUsuarios = (req, res) => {
   res.json(usuarios);
 };
 
 const getUsuario = (req, res) => {
   let id = parseInt(req.params.id);
-  if (isNaN(id)) {
-    res.status(400).json({ err: true, message: "Id invalido" });
-    return;
-  }
-  let usuarioIndex = usuarios.findIndex((usuario) => usuario.id === id);
-  if (usuarioIndex === -1) {
-    res.status(404).json({ err: true, message: "Usuario no encontrado" });
+  const result = findUsuarioById(id);
+  if (result.err) {
+    res.status(400).json(result);
   } else {
     res.json({
-      usuario: usuarios[usuarioIndex],
+      usuario: usuarios[result.usuarioIndex],
     });
   }
 };
 
 const crearUsuario = (req, res) => {
-  let nombre = req.body.nombre;
-  let apellido = req.body.apellido || "";
-  let email = req.body.email;
-  if (!nombre && !email) {
-    res.status(400).json({ err: true, message: "Nombre y email requeridos" });
+  const { nombre, apellido = "", email } = req.body;
+  const validationError = validateUsuario(nombre, apellido, email);
+  if (validationError) {
+    res.status(400).json(validationError);
     return;
   }
-  if (!email.includes("@") || !email.includes(".")) {
-    res.status(400).json({ err: true, message: "Formato de email invalido" });
-    return;
-  }
-  if (usuarios.find((usuario) => usuario.email === email)) {
-    res.status(400).json({ err: true, message: "Email ya existe" });
-    return;
-  }
-  if (nombre.match(/\d+/) || apellido.match(/\d+/)) {
-    res.status(400).json({
-      err: true,
-      message: "Nombre y apellido no pueden tener numeros",
-    });
-    return;
-  }
-  let id = usuarios.length + 1;
-  usuarios.push({
-    id: id,
-    nombre: nombre,
-    apellido: apellido,
-    email: email,
-  });
+  const id = usuarios.length + 1;
+  usuarios.push({ id, nombre, apellido, email });
   res.json({
     usuario: usuarios[usuarios.length - 1],
   });
@@ -82,57 +86,31 @@ const crearUsuario = (req, res) => {
 
 const actualizarUsuario = (req, res) => {
   let id = parseInt(req.params.id);
-  if (isNaN(id)) {
-    res.status(400).json({ err: true, message: "Id invalido" });
+  const result = findUsuarioById(id);
+  if (result.err) {
+    res.status(400).json(result);
     return;
   }
-  let usuarioIndex = usuarios.findIndex((usuario) => usuario.id === id);
-  if (usuarioIndex === -1) {
-    res.status(404).json({ err: true, message: "Usuario no encontrado" });
+  const { nombre, apellido = "", email } = req.body;
+  const validationError = validateUsuario(nombre, apellido, email, id);
+  if (validationError) {
+    res.status(400).json(validationError);
     return;
   }
-  let nombre = req.body.nombre;
-  let apellido = req.body.apellido || "";
-  let email = req.body.email;
-  if (!nombre && !email) {
-    res.status(400).json({ err: true, message: "Nombre y email requeridos" });
-    return;
-  }
-  if (!email.includes("@") || !email.includes(".")) {
-    res.status(400).json({ err: true, message: "Formato de email invalido" });
-    return;
-  }
-  if (usuarios.find((usuario) => usuario.email === email)) {
-    res.status(400).json({ err: true, message: "Email ya existe" });
-    return;
-  }
-  if (nombre.match(/\d+/) || apellido.match(/\d+/)) {
-    res.status(400).json({
-      err: true,
-      message: "Nombre y apellido no pueden tener numeros",
-    });
-    return;
-  }
-  usuarios[usuarioIndex].nombre = nombre;
-  usuarios[usuarioIndex].apellido = apellido;
-  usuarios[usuarioIndex].email = email;
+  usuarios[result.usuarioIndex] = { id, nombre, apellido, email };
   res.json({
-    usuario: usuarios[usuarioIndex],
+    usuario: usuarios[result.usuarioIndex],
   });
 };
 
 const eliminarUsuario = (req, res) => {
   let id = parseInt(req.params.id);
-  if (isNaN(id)) {
-    res.status(400).json({ err: true, message: "Id invalido" });
+  const result = findUsuarioById(id);
+  if (result.err) {
+    res.status(400).json(result);
     return;
   }
-  let usuarioIndex = usuarios.findIndex((usuario) => usuario.id === id);
-  if (usuarioIndex === -1) {
-    res.status(404).json({ err: true, message: "Usuario no encontrado" });
-    return;
-  }
-  usuarios.splice(usuarioIndex, 1);
+  usuarios.splice(result.usuarioIndex, 1);
   res.json({
     message: "Usuario eliminado",
   });
