@@ -9,4 +9,16 @@ const router = express.Router();
  *   description: Gestión de usuarios
  */
 
+/**
+ * @swagger
+ * /usuarios:
+ *   get:
+ *     summary: Lista todos los usuarios
+ *     tags: [Usuarios]
+ *     responses:
+ *       200:
+ *         description: Lista de usuarios
+ */
+router.get("/", usuariosController.getUsuarios);
+
 export default router;

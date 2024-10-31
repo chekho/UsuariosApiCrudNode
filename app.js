@@ -16,9 +16,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.use("/api-docs", swagger);
-app.use("/", (req, res) => {
-  res.send("Bienvenido a la API RESTful de Usuarios");
-});
+app.use("/usuarios", usuariosRoutes);
 
 app.listen(port, () => {
   console.log(`Aplicacion funcionando en http://localhost:${port}/usuarios`);

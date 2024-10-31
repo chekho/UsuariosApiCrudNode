@@ -25,7 +25,9 @@ let usuarios = [
   },
 ];
 
-const getUsuarios = (req, res) => {};
+const getUsuarios = (req, res) => {
+  res.json(usuarios);
+};
 
 const getUsuario = (req, res) => {};
 
