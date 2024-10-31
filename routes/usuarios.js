@@ -18,6 +18,26 @@ const router = express.Router();
  *     responses:
  *       200:
  *         description: Lista de usuarios
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                     description: ID del usuario
+ *                   nombre:
+ *                     type: string
+ *                     description: Nombre del usuario
+ *                   apellido:
+ *                     type: string
+ *                     description: Apellido del usuario
+ *                   email:
+ *                     type: string
+ *                     description: Email del usuario
+ *                     format: email
  */
 router.get("/", usuariosController.getUsuarios);
 
@@ -36,7 +56,121 @@ router.get("/", usuariosController.getUsuarios);
  *     responses:
  *       200:
  *         description: Datos del usuario
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 usuario:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: integer
+ *                       description: ID del usuario
+ *                     nombre:
+ *                       type: string
+ *                       description: Nombre del usuario
+ *                     apellido:
+ *                       type: string
+ *                       description: Apellido del usuario
+ *                     email:
+ *                       type: string
+ *                       description: Email del usuario
+ *                       format: email
+ *       400:
+ *         description: Error de validación
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 err:
+ *                   type: boolean
+ *                   description: Indica si hubo un error
+ *                 message:
+ *                   type: string
+ *                   description: Mensaje de error
+ *       404:
+ *         description: Usuario no encontrado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 err:
+ *                   type: boolean
+ *                   description: Indica si hubo un error
+ *                 message:
+ *                   type: string
+ *                   description: Mensaje de error
  */
 router.get("/:id", usuariosController.getUsuario);
+
+/**
+ * @swagger
+ * /usuarios:
+ *   post:
+ *     summary: Crea un nuevo usuario
+ *     tags: [Usuarios]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - nombre
+ *               - email
+ *             properties:
+ *               nombre:
+ *                 type: string
+ *                 description: Nombre del usuario
+ *               apellido:
+ *                 type: string
+ *                 description: Apellido del usuario
+ *               email:
+ *                 type: string
+ *                 description: Email del
+ *                 format: email
+ *     responses:
+ *       200:
+ *         description: Usuario creado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 usuario:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: integer
+ *                       description: ID del usuario
+ *                     nombre:
+ *                       type: string
+ *                       description: Nombre del usuario
+ *                     apellido:
+ *                       type: string
+ *                       description: Apellido del usuario
+ *                     email:
+ *                       type: string
+ *                       description: Email del usuario
+ *                       format: email
+ *       400:
+ *         description: Error de validación
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 err:
+ *                   type: boolean
+ *                   description: Indica si hubo un error
+ *                 message:
+ *                   type: string
+ *                   description: Mensaje de error
+ */
+
+router.post("/", usuariosController.crearUsuario);
 
 export default router;

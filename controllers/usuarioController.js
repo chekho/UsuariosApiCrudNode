@@ -45,7 +45,40 @@ const getUsuario = (req, res) => {
   }
 };
 
-const crearUsuario = (req, res) => {};
+const crearUsuario = (req, res) => {
+  let nombre = req.body.nombre;
+  let apellido = req.body.apellido || "";
+  let email = req.body.email;
+  if (!nombre && !email) {
+    res.status(400).json({ err: true, message: "Nombre y email requeridos" });
+    return;
+  }
+  if (!email.includes("@") || !email.includes(".")) {
+    res.status(400).json({ err: true, message: "Formato de email invalido" });
+    return;
+  }
+  if (usuarios.find((usuario) => usuario.email === email)) {
+    res.status(400).json({ err: true, message: "Email ya existe" });
+    return;
+  }
+  if (nombre.match(/\d+/) || apellido.match(/\d+/)) {
+    res.status(400).json({
+      err: true,
+      message: "Nombre y apellido no pueden tener numeros",
+    });
+    return;
+  }
+  let id = usuarios.length + 1;
+  usuarios.push({
+    id: id,
+    nombre: nombre,
+    apellido: apellido,
+    email: email,
+  });
+  res.json({
+    usuario: usuarios[usuarios.length - 1],
+  });
+};
 
 const actualizarUsuario = (req, res) => {};
 
