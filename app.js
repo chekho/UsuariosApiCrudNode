@@ -17,6 +17,7 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use("/api-docs", swagger);
 app.use("/usuarios", usuariosRoutes);
+app.use(errorControllers.error404);
 
 app.listen(port, () => {
   console.log(`Aplicacion funcionando en http://localhost:${port}/usuarios`);
