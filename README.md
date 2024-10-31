@@ -11,7 +11,7 @@ Sigue estos pasos para instalar las dependencias necesarias:
 1. Clona este repositorio:
 
    ```bash
-   git clone https://github.com/chekhor/UsuariosApiCrudNode.git
+   git clone https://github.com/chekho/UsuariosApiCrudNode.git
 
    ```
 
